@@ -4,6 +4,7 @@ def splitPass(boardingPass):
 	row = boardingPass[:7]
 	col = boardingPass[7:]
 	return(row, col)
+
 def determineRow(passRow):
 	rowRange = [0, 127]
 	delta = 64
@@ -15,6 +16,7 @@ def determineRow(passRow):
 			rowRange[0] += delta
 		delta = delta/2
 	return int(rowRange[0])
+
 def determineCol(passCol):
 	colRange = [0, 7]
 	delta = 4
@@ -26,6 +28,7 @@ def determineCol(passCol):
 			colRange[0] += delta
 		delta = delta/2
 	return(int(colRange[0]))
+
 def getSeatID(thisRow, thisCol):
 	seatID = thisRow*8 + thisCol
 	return(int(seatID))
