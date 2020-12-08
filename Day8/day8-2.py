@@ -26,19 +26,19 @@ def checkChange(instructions):
 			break
 
 # Open and clean up input
-rawInstructions = open('sample.txt', 'r').read().splitlines()
+rawInstructions = open('input.txt', 'r').read().splitlines()
 instructions = [] #each line becomes an item in this list
 for i in rawInstructions:
 	a = str(i[:3])
 	b = int(i[4:])
-	instructions.append([a, b]) #each instruction is a list w/2 items
+	instructions.append((a, b)) #each instruction is a list w/2 items
 
 for i in range(len(instructions)):
 	newInstructions = instructions.copy()
-	pprint(newInstructions)
 	thisInstruction = newInstructions[i][0]
 
 	if thisInstruction == 'nop':
-		newInstructions[i][0] = 'jmp'
+		newInstructions[i] = ('jmp', newInstructions[i][1])
 	elif thisInstruction == 'jmp':
-		newInstructions[i][0] = 'nop'
+		newInstructions[i] = ('nop', newInstructions[i][1])
+	checkChange(newInstructions)
