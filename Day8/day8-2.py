@@ -37,7 +37,6 @@ for i in range(len(instructions)):
 	newInstructions = instructions.copy()
 	pprint(newInstructions)
 	thisInstruction = newInstructions[i][0]
-	# print(str(i) + ': ' + thisInstruction)
 
 	if thisInstruction == 'nop':
 		newInstructions[i][0] = 'jmp'
