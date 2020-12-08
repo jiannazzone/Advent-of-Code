@@ -27,21 +27,18 @@ def createBag(x):
 		for i in thisRule[1]:
 			thisContents[i[2:]] = int(i[0])
 	allBags[thisColor] = (Bag(thisColor, thisContents))
-
-def countShiny(x, shinyCount, alreadyChecked):
-	for i in x:
-		if allBags[i].foundIn != set() and i not in alreadyChecked:
-			shinyCount += 1
-			alreadyChecked.append(i)
-			(shinyCount, alreadyChecked) = countShiny(allBags[i].foundIn, shinyCount, alreadyChecked)
-		elif allBags[i].foundIn == set() and i not in alreadyChecked:
-			shinyCount += 1
-			alreadyChecked.append(i)
-
-	return (shinyCount, alreadyChecked)
+def getProduct(color):
+	thisProduct = 0
+	for i in allBags[color].contents:
+		print(i)
+		if allBags[i].contents != {}:
+			print(allBags[i].contents)
+			for j in allBags[i].contents:
+				coefficient = allBags[i].contents[j]
+				getProduct(allBags[i].color)
 
 # Open the file and clean up the text
-rawRules = open('input.txt', 'r').read().splitlines()
+rawRules = open('sample.txt', 'r').read().splitlines()
 rawRules = cleanInput(rawRules)
 
 # Create bag objects for each input line
@@ -56,10 +53,5 @@ for key in allBags:
 	for color, count in bagObj.contents.items():
 		allBags[color].foundIn.add(bagObj.color)
 
-shinyCount = 0
-alreadyChecked = []
-(shinyCount, alreadyChecked) = countShiny(allBags['shiny gold'].foundIn,
-	shinyCount, alreadyChecked)
-print('Shiny Count: ' + str(shinyCount))
-print('All Checked: ' + str(len(alreadyChecked)))
-print('Already Checked: ' + str(alreadyChecked))
+# print(allBags['shiny gold'].contents)
+getProduct('shiny gold')
