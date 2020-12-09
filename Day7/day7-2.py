@@ -27,15 +27,25 @@ def createBag(x):
 		for i in thisRule[1]:
 			thisContents[i[2:]] = int(i[0])
 	allBags[thisColor] = (Bag(thisColor, thisContents))
-def getProduct(color):
-	thisProduct = 0
-	for i in allBags[color].contents:
-		print(i)
-		if allBags[i].contents != {}:
-			print(allBags[i].contents)
-			for j in allBags[i].contents:
-				coefficient = allBags[i].contents[j]
-				getProduct(allBags[i].color)
+def getProduct(innerColor, outerColor):
+	# print(
+	# 	'Inner Color: ' + str(innerColor) +
+	# 	', Outer Color: ' + str(outerColor) + '\n'
+	# 	)
+	if allBags[innerColor].contents == {}:
+		lowerFactor = allBags[outerColor].contents[innerColor]
+		print(lowerFactor)
+	else:
+		for i in allBags[innerColor].contents:
+			upperFactor = allBags[innerColor].contents[i]
+			print(
+				i + ': ' + str(upperFactor)
+				)
+			if allBags[i].contents != {}:
+				# print(allBags[i].contents)
+				for key in allBags[i].contents:
+					# print(key)
+					getProduct(key, i)
 
 # Open the file and clean up the text
 rawRules = open('sample.txt', 'r').read().splitlines()
@@ -54,4 +64,4 @@ for key in allBags:
 		allBags[color].foundIn.add(bagObj.color)
 
 # print(allBags['shiny gold'].contents)
-getProduct('shiny gold')
+getProduct('shiny gold', None)
