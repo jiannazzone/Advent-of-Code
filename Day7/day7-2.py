@@ -27,28 +27,21 @@ def createBag(x):
 		for i in thisRule[1]:
 			thisContents[i[2:]] = int(i[0])
 	allBags[thisColor] = (Bag(thisColor, thisContents))
-def getProduct(innerColor, outerColor):
-	# print(
-	# 	'Inner Color: ' + str(innerColor) +
-	# 	', Outer Color: ' + str(outerColor) + '\n'
-	# 	)
-	if allBags[innerColor].contents == {}:
-		lowerFactor = allBags[outerColor].contents[innerColor]
-		print(lowerFactor)
-	else:
-		for i in allBags[innerColor].contents:
-			upperFactor = allBags[innerColor].contents[i]
-			print(
-				i + ': ' + str(upperFactor)
-				)
-			if allBags[i].contents != {}:
-				# print(allBags[i].contents)
-				for key in allBags[i].contents:
-					# print(key)
-					getProduct(key, i)
+def countInnerBags(thisColor):
+	if allBags[thisColor].contents == {}:
+		return 0
+	total = 0
+	# print(allBags[thisColor].contents)
+
+	for innerColor in allBags[thisColor].contents:
+		innerCount = allBags[thisColor].contents[innerColor]
+		total = (total + 
+			(countInnerBags(innerColor)*innerCount) + 
+			innerCount)
+	return total
 
 # Open the file and clean up the text
-rawRules = open('sample.txt', 'r').read().splitlines()
+rawRules = open('input.txt', 'r').read().splitlines()
 rawRules = cleanInput(rawRules)
 
 # Create bag objects for each input line
@@ -64,4 +57,5 @@ for key in allBags:
 		allBags[color].foundIn.add(bagObj.color)
 
 # print(allBags['shiny gold'].contents)
-getProduct('shiny gold', None)
+total = countInnerBags('shiny gold')
+print(total)
