@@ -3,8 +3,8 @@
 from pprint import pprint
 
 debug = False
-# filePath = 'Day 01/Sample_1.txt'
-filePath = 'Day 01/Input_1.txt'
+# filePath = 'Day01/Sample_1.txt'
+filePath = 'Day01/Input_1.txt'
 
 increases = 0
 
