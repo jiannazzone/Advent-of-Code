@@ -9,6 +9,7 @@ with open(filepath) as f:
     data = f.read().split('\n')
 dataSize = len(data[0])
 
+# Part 1
 def getPowerConsumption():
     gamma = ''
     epsilon = ''
@@ -38,6 +39,7 @@ def getPowerConsumption():
     print('Epsilon: ' + str(epsilon))
     print('Power Consumption: ' + str(powerComsumption))
 
+# Part 2
 def parseData(data, thisBit, i):
     newData = []
     for line in data:
