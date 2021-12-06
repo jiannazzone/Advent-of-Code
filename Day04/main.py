@@ -48,7 +48,7 @@ def checkForWin(theseBoards):
                 return i
         
         # Check for columns
-        for col in range(0, len(thisBoard)):
+        for col in range(0, len(thisBoard[0])):
             columnEvaluation = []
             for row in thisBoard:
                 if row[col] == 'x':
@@ -93,6 +93,7 @@ def letTheSquidWin():
                 return
             else:
                 squidBoards.pop(winningBoard)
+
     print('You messed up.')
 
 winBoards = boards.copy()
