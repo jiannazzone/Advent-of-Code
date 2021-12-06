@@ -22,7 +22,7 @@ def prepareData():
         "y2": value
     }
     '''
-    ventData = []
+
     for line in data:
         thisLine = line.split(' -> ')
         firstCoordinate = [int(x) for x in thisLine[0].split(',')]
@@ -35,6 +35,11 @@ def prepareData():
         }
         ventData.append(thisEntry)
 
+    ventMap = createBlankMap()
+
+    return ventMap, ventData
+
+def createBlankMap():
     # Get the max for x and y to create an empty 2D list
     xMax = 0
     yMax = 0
@@ -56,9 +61,9 @@ def prepareData():
     # print("Max y-value: " + str(yMax))
 
     ventMap = [[0 for x in range(xMax + 1)] for y in range(yMax + 1)]
-    return ventMap, ventData
+    return ventMap
 
-def markTheMap():
+def markTheMap(includeDiagonals):
 
     for entry in ventData:
 
@@ -91,7 +96,40 @@ def markTheMap():
             # Increment the count on each grid point in the line
             for row in range(startRow, stopRow):
                 ventMap[row][col] += 1
-           
+        
+        #Check for diagonal lines
+        if includeDiagonals:
+            # Ensure that it's a 45-degree diagonal
+            xLength = abs(entry['x1'] - entry['x2'])
+            yLength = abs(entry['y1'] - entry['y2'])
+
+            # Arrange points so that first point always has the lower x-value
+            if xLength == yLength:
+                if entry['x1'] < entry['x2']:
+                    firstPoint = (entry['x1'], entry['y1'])
+                    secondPoint = (entry['x2'], entry['y2'])
+                else:
+                    firstPoint = (entry['x2'], entry['y2'])
+                    secondPoint = (entry['x1'], entry['y1'])
+                
+                if firstPoint[1] > secondPoint[1]:
+                    diagonalUp = True
+                else:
+                    diagonalUp = False
+                
+                if diagonalUp:
+                    col = firstPoint[0]
+                    for row in range(firstPoint[1], secondPoint[1] -1, -1):
+                        ventMap[row][col] += 1
+                        col += 1
+                else:
+                    col = firstPoint[0]
+                    for row in range(firstPoint[1], secondPoint[1] + 1):
+                        ventMap[row][col] += 1
+                        col += 1
+                
+
+
 def countTheMap():
     intersectionCount = 0
     for row in ventMap:
@@ -101,5 +139,13 @@ def countTheMap():
     print('Total intersections: ' + str(intersectionCount))
 
 ventMap, ventData = prepareData()
-markTheMap()
+
+print('\nPart 1:\n-----')
+markTheMap(False)
 countTheMap()
+
+print('\nPart 2:\n-----')
+ventMap = createBlankMap()
+markTheMap(True)
+countTheMap()
+# pprint(ventMap)
