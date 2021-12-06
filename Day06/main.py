@@ -24,17 +24,16 @@ def prepareFish():
 def enhancedSimulateGrowth(days):
 
     for day in range(days):
-        newFishToEight = fishCounter[0]
-        fishBackToSix = fishCounter[0]
+        # This represents fish that need to loop back to 6
+        # And the number of fish being born
+        fishAtZero = fishCounter[0]
 
         for i in range(1,9):
             fishCounter[i-1] = fishCounter[i]
-        fishCounter[8] = newFishToEight
-        fishCounter[6] += fishBackToSix
-    
-    totalCount = 0
-    for i in range(9):
-        totalCount += fishCounter[i]
+        fishCounter[8] = fishAtZero
+        fishCounter[6] += fishAtZero
+
+    totalCount = sum(fishCounter.values())
     
     print('\n----------')
     print('After ' + str(days) + ' days, there are ' + str(totalCount) + ' fish.')
