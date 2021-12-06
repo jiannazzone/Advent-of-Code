@@ -1,46 +1,46 @@
 # Day 06
-from pprint import pprint
 
-filepath = 'Day06/sample.txt'
-# filepath = 'Day06/input.txt'
-
-class Lanternfish:
-    def __init__(self, age, firstTime):
-        self.age = age
-        self.firstTime = firstTime
-
-allFish = []
+# filepath = 'Day06/sample.txt'
+filepath = 'Day06/input.txt'
 
 def prepareFish():
     with open(filepath) as f:
         initialPopulation = [int(x) for x in f.read().split(',')]
-    for age in initialPopulation:
-        newFish = Lanternfish(age, False)
-        allFish.append(newFish)
+    fishCounter = {
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+    }
+    for fish in initialPopulation:
+        fishCounter[fish] += 1
+    return fishCounter
 
-def simulateGrowth(days):
+def enhancedSimulateGrowth(days):
 
-    for i in range(days):
+    for day in range(days):
+        newFishToEight = fishCounter[0]
+        fishBackToSix = fishCounter[0]
 
-        # Generate a list of newly-born fish for each day
-        fishToAppend = []
-
-        # Simulate the age process for already-existing fish
-        for fish in allFish:
-            fish.age -= 1
-
-            if fish.age < 0:
-                fish.age = 6
-                fish.firstTime = False
-                fishToAppend.append(Lanternfish(8, True))
-        
-        # Append all newly-born fish
-        for fish in fishToAppend:
-            allFish.append(fish)
+        for i in range(1,9):
+            fishCounter[i-1] = fishCounter[i]
+        fishCounter[8] = newFishToEight
+        fishCounter[6] += fishBackToSix
     
-    print('After ' + str(days) + ' days, there are ' + str(len(allFish)) + ' fish.')
+    totalCount = 0
+    for i in range(9):
+        totalCount += fishCounter[i]
+    
+    print('\n----------')
+    print('After ' + str(days) + ' days, there are ' + str(totalCount) + ' fish.')
+    print('----------\n')
 
-
-prepareFish()
-print('\n----Part 1----')
-simulateGrowth(80)
+#--- MAIN CODE ---#
+daysToSimulate = 256
+fishCounter = prepareFish()
+enhancedSimulateGrowth(daysToSimulate)
