@@ -13,6 +13,7 @@ with open(filepath) as f:
 # Prepare the Boards and Bingo Numbers
 bingoNumbers = [int(x) for x in data[0].split(',')]
 boards = []
+winBoards = []
 
 for i in range(1, len(data)):
     thisBoard = []
@@ -23,43 +24,61 @@ for i in range(1, len(data)):
         thisBoard.append([int(x) for x in row])
     boards.append(thisBoard)
 
-def applyNumber(thisNum, theseBoards):
+def applyNumber(thisNum):
     # Apply number to all bingo boards
-    for i in range(0, len(theseBoards)):
-        for row in range(0, len(theseBoards[i])):
-            for col in range(0, len(theseBoards[i][row])):
-                if theseBoards[i][row][col] == thisNum:
-                    theseBoards[i][row][col] = 'x'
-    return theseBoards
+    for i in range(0, len(boards)):
+        for row in range(0, len(boards[i])):
+            for col in range(0, len(boards[i][row])):
+                if boards[i][row][col] == thisNum:
+                    boards[i][row][col] = 'x'
 
-def checkForWin(theseBoards):
+def checkForWin():
 
     for i in range(0, len(theseBoards)):
         # Check rows
         thisBoard = theseBoards[i]
         for row in thisBoard:
-            rowEvaluation = []
+            count = 0
             for number in row:
                 if number == 'x':
-                    rowEvaluation.append(True)
-                else:
-                    rowEvaluation.append(False)
-            if all(rowEvaluation):
+                    count += 1
+            if count == 5:
                 return i
         
         # Check for columns
-        for col in range(0, len(thisBoard[0])):
-            columnEvaluation = []
+        for col in range(0, 5):
+            count = 0
             for row in thisBoard:
                 if row[col] == 'x':
-                    columnEvaluation.append(True)
-                else:
-                    columnEvaluation.append(False)
-            if all(columnEvaluation):
+                    count += 1
+            if count == 5:
                 return i
     
     # If no winner yet
     return -1
+
+def checkForWins():
+    winsThisRound = []
+    for i in range(0, len(boards)):
+        # Check rows
+        thisBoard = boards[i]
+        for row in thisBoard:
+            count = 0
+            for number in row:
+                if number == 'x':
+                    count += 1
+            if count == 5:
+                winsThisRound.append(i)
+        
+        # Check for columns
+        for col in range(0, 5):
+            count = 0
+            for row in thisBoard:
+                if row[col] == 'x':
+                    count += 1
+            if count == 5:
+                winsThisRound.append(i)
+    return winsThisRound
 
 def getScore(board, lastNum):
     unmarkedSum = 0
@@ -73,7 +92,7 @@ def getScore(board, lastNum):
     print('Final Score: ' + str(score))
 
 def playBingo():
-    winBoards = boards.copy()
+    winBoards = list(boards)
     for number in bingoNumbers:
         winBoards = applyNumber(number, winBoards)
         winningBoard = checkForWin(winBoards)
@@ -83,22 +102,24 @@ def playBingo():
             return
 
 def letTheSquidWin():
-    squidBoards = boards.copy()
+    
     for number in bingoNumbers:
-        squidBoards = applyNumber(number, squidBoards)
-        winningBoard = checkForWin(squidBoards)
-        if winningBoard > -1:
-            if len(squidBoards) == 1:
-                getScore(squidBoards[0], number)
+        applyNumber(number)
+        winsThisRound = sorted(checkForWins(), reverse=True)
+
+        # Wait until the 5th number to start checking
+        if bingoNumbers[4] != number:
+            if len(boards) > 1 and len(winsThisRound) > 0:
+                for i in winsThisRound:
+                    del boards[i]
+            elif len(winsThisRound) == 1:
+                getScore(boards[0], number)
                 return
-            else:
-                squidBoards.pop(winningBoard)
-
     print('You messed up.')
+        
 
-winBoards = boards.copy()
-print('Part 1:')
-playBingo()
+# print('Part 1:')
+# playBingo()
 
 print('\n----------------\n')
 
