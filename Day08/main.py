@@ -72,25 +72,18 @@ def part2(data):
         thisMapping = {}
         for i in range(0, 10):
             thisMapping[i] = ''
-    
-        # Keep track of the number of solved digits
-        numSolved = 0
 
         # Solve the easy digits first
         for signal in entry[0]:
             signalLength = len(signal)
             if signalLength == 2:
                 thisMapping[1] = signal
-                numSolved += 1
             elif signalLength == 3:
                 thisMapping[7] = signal
-                numSolved += 1
             elif signalLength == 4:
                 thisMapping[4] = signal
-                numSolved += 1
             elif signalLength == 7:
                 thisMapping[8] = signal
-                numSolved += 1
         
         # The keys for this dictionary correspond to "standard" 7-segment display locations (see top of file)
         # The value correspond to what "letter" lights that location in THIS entry
@@ -111,21 +104,21 @@ def part2(data):
                 break
         
         # Make lists of the signals with 5 letters and 6 letters for comparisons
-        fiveLengthNumbers = []
-        sixLengthNumbers = []
+        fiveLetterNumbers = []
+        sixLetterNumbers = []
         for signal in entry[0]:
             if len(signal) == 5:
-                fiveLengthNumbers.append(signal)
+                fiveLetterNumbers.append(signal)
             elif len(signal) == 6:
-                sixLengthNumbers.append(signal)
+                sixLetterNumbers.append(signal)
 
         # Compare all of the 5-letter signals
         # For the three signals, they all share three letters. Those are the a, d and g letters
         # Then see which of those is present in 4... that is your d. The other is g
         
         commonLetters = ''
-        for letter in fiveLengthNumbers[0]:
-            if letter in fiveLengthNumbers[1] and letter in fiveLengthNumbers[2]:
+        for letter in fiveLetterNumbers[0]:
+            if letter in fiveLetterNumbers[1] and letter in fiveLetterNumbers[2]:
                 commonLetters += letter
 
         for letter in commonLetters:
@@ -134,10 +127,20 @@ def part2(data):
                     thisSegmentMapping['d'] = letter
                 else:
                     thisSegmentMapping['g'] = letter
-
         
-        # print(thisMapping)
+        # Now that we know all the horizontal letters, we can deduce the signal for 0
+        # Of the 6-letter signals, 0 is missing one of the horizonal letters
+        horizontalLetters = [thisSegmentMapping['a'],thisSegmentMapping['d'], thisSegmentMapping['g']]
+        for signal in sixLetterNumbers:
+            if not all((x in signal) for x in horizontalLetters):
+                thisMapping[0] = signal
+
+        # Function output
+        print('Letter mappings: ')
         print(thisSegmentMapping)
+        print('----------')
+        print(f'Solved numbers:')
+        print(thisMapping)
 
 
 filepath = 'Day08/sample1.txt'
