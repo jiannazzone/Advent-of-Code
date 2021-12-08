@@ -1,7 +1,7 @@
 # Day 08
 from pprint import pprint
 
-# List with all of the numbers and their corresponding segment
+# Dictionary with all of the numbers and their corresponding segments
 # The number 8 would be rendered using the following segments
 
 #  aaaa
@@ -12,18 +12,18 @@ from pprint import pprint
 # e    f
 #  gggg
 
-allNums = [
-    ['a','b','c','e','f','g'],
-    ['c','f'],
-    ['a','c','d','e','g'],
-    ['a','c','d','f','g'],
-    ['b','c','d','f'],
-    ['a','b','d','f','g'],
-    ['a','b','d','e','f','g'],
-    ['a','c','f'],
-    ['a','b','c','d','e','f','g'],
-    ['a','b','c','d','f','g']
-]
+allNums = {
+    0: 'abcefg',
+    1: 'cf',
+    2: 'acdeg',
+    3: 'acdfg',
+    4: 'bcdf',
+    5: 'abdfg',
+    6: 'abdefg',
+    7: 'acf',
+    8: 'abcdefg',
+    9: 'abcdfg'
+}
 
 # Data is prepared as a list of tuples. Each tuple has the following structure:
 # Tuple = ([signals], [outputs])
@@ -66,11 +66,84 @@ def part1(data):
     print(f'Total occurences of 1, 4, 7, 8: {sum}')
 
 def part2(data):
-    pass
+
+    for entry in data:
+        # Prepare an empty dictionary to store the number mappings for this entry
+        thisMapping = {}
+        for i in range(0, 10):
+            thisMapping[i] = ''
+    
+        # Keep track of the number of solved digits
+        numSolved = 0
+
+        # Solve the easy digits first
+        for signal in entry[0]:
+            signalLength = len(signal)
+            if signalLength == 2:
+                thisMapping[1] = signal
+                numSolved += 1
+            elif signalLength == 3:
+                thisMapping[7] = signal
+                numSolved += 1
+            elif signalLength == 4:
+                thisMapping[4] = signal
+                numSolved += 1
+            elif signalLength == 7:
+                thisMapping[8] = signal
+                numSolved += 1
+        
+        # The keys for this dictionary correspond to "standard" 7-segment display locations (see top of file)
+        # The value correspond to what "letter" lights that location in THIS entry
+        thisSegmentMapping = {
+            'a': '',
+            'b': '',
+            'c': '',
+            'd': '',
+            'e': '',
+            'f': '',
+            'g': ''
+        }
+
+        # Now that we know 1 and 7, we can deduce which letter lights up the "a" location
+        for letter in thisMapping[7]:
+            if letter not in thisMapping[1]:
+                thisSegmentMapping['a'] = letter
+                break
+        
+        # Make lists of the signals with 5 letters and 6 letters for comparisons
+        fiveLengthNumbers = []
+        sixLengthNumbers = []
+        for signal in entry[0]:
+            if len(signal) == 5:
+                fiveLengthNumbers.append(signal)
+            elif len(signal) == 6:
+                sixLengthNumbers.append(signal)
+
+        # Compare all of the 5-letter signals
+        # For the three signals, they all share three letters. Those are the a, d and g letters
+        # Then see which of those is present in 4... that is your d. The other is g
+        
+        commonLetters = ''
+        for letter in fiveLengthNumbers[0]:
+            if letter in fiveLengthNumbers[1] and letter in fiveLengthNumbers[2]:
+                commonLetters += letter
+
+        for letter in commonLetters:
+            if letter != thisSegmentMapping['a']:
+                if letter in thisMapping[4]:
+                    thisSegmentMapping['d'] = letter
+                else:
+                    thisSegmentMapping['g'] = letter
+
+        
+        # print(thisMapping)
+        print(thisSegmentMapping)
+
 
 filepath = 'Day08/sample1.txt'
 # filepath = 'Day08/sample2.txt'
 # filepath = 'Day08/input.txt'
 
 data = prepareData(filepath)
-part1(data)
+# part1(data)
+part2(data)
