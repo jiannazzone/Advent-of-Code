@@ -69,6 +69,7 @@ for i in range(len(data)):
 score = 0
 for line in corruptedLines:
     score += checkScore(line, incompletePoints)
+print('--------------------')
 print(f'Part 1 Score: {score}')
 
 # Get a list of the incomplete lines
@@ -80,6 +81,5 @@ for line in data:
 # Calculate the scores for each incomplete line
 scores = [checkScore2(line, completePoints) for line in incompleteLines]
 winningScore = sorted(scores)[len(scores)//2]
-print('Part 2 Scores:')
-pprint(scores)
-print(f'Winning Score: {winningScore}')
+print(f'Part 2 Winning Score: {winningScore}')
+print('--------------------')
