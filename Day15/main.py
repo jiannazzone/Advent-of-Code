@@ -6,7 +6,6 @@ from pathfinding.core.diagonal_movement import DiagonalMovement
 from pathfinding.core.grid import Grid
 from pathfinding.finder.dijkstra import DijkstraFinder
 
-
 def prepareData(isSample):
     if isSample:
         filepath = 'Day15/sample.txt'
