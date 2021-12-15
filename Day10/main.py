@@ -1,8 +1,10 @@
 # Day 10
+from os import close
 from pprint import pprint
+import re
 
-def prepareData(useSample):
-    if useSample:
+def prepareData(isSample):
+    if isSample:
         filepath = 'Day10/sample.txt'
     else:
         filepath = 'Day10/input.txt'
@@ -10,45 +12,53 @@ def prepareData(useSample):
         data = f.read().split('\n')
     return data
 
-def analyzeLines(data):
-    # This function will count each pair of opening/closing tags
-    # If for every pair, there are fewer opening than closing, line is incomplete?
-    # If for at least one pair, there are more closing than opening, line is corrupt?
+def checkScore(line, points):
+    for character in line:
+        if character in points:
+            return points[character]
 
-    tagDictionaryList = []
+def part1(isSample):
+    data = prepareData(isSample)
+    pairs = ['()', '[]', '{}', '<>']
+    openingTags = ['(', '[', '{', '<']
+    closingTags = [')', ']', '}', '>']
+    points = {
+        ')': 3,
+        ']': 57,
+        '}': 1197,
+        '>': 25137
+    }
+    
+    mismatches = []
+    for i in range(len(openingTags)):
+        for j in range(len(closingTags)):
+            if i != j:
+                mismatches.append(openingTags[i] + closingTags[j])
+
+    # Loop through each line of data and reduce until no more changes are being applied
+    while True:
+        p = re.compile('|'.join(map(re.escape, pairs)))
+        reducedData = [p.sub('', s) for s in data]
+        if reducedData == data:
+            break
+        else:
+            data = reducedData
+    
+    # Once reduced look for mismatched pairs
+    # Generate an index os corrupted lines
+    corruptedLines = []
     for i in range(len(data)):
-        
-        # Append new dictionary for each line of data
-        tagDictionaryList.append({
-            'parentheses': [0, 0],
-            'brackets': [0, 0],
-            'curlyBrackets': [0, 0],
-            'carets': [0, 0]
-        })
+        for mismatch in mismatches:
+            if mismatch in data[i]:
+                corruptedLines.append(data[i])
+    
+    pprint(corruptedLines)
+    
+    # Get the score
+    score = 0
+    for line in corruptedLines:
+        score += checkScore(line, points)
+    print(f'Final score: {score}')
 
-        # Count each letter in each line
-        for letter in data[i]:
-            if letter == '(':
-                tagDictionaryList[i]['parentheses'][0] += 1
-            elif letter == ')':
-                tagDictionaryList[i]['parentheses'][1] += 1
-            elif letter == '[':
-                tagDictionaryList[i]['brackets'][0] += 1
-            elif letter == ']':
-                tagDictionaryList[i]['brackets'][1] += 1
-            elif letter == '{':
-                tagDictionaryList[i]['curlyBrackets'][0] += 1
-            elif letter == '}':
-                tagDictionaryList[i]['curlyBrackets'][1] += 1
-            elif letter == '<':
-                tagDictionaryList[i]['carets'][0] += 1
-            elif letter == '>':
-                tagDictionaryList[i]['carets'][1] += 1
-
-        print(f'{data[i]} -- Length: {len(data[i])}')
-        pprint(tagDictionaryList[i])
-        print('')
-
-data = prepareData(True)
-print('')
-analyzeLines(data)
+isSample = False
+part1(isSample)
