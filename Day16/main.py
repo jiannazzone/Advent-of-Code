@@ -35,26 +35,88 @@ def parseBinaryString(binaryString):
     bitsType = binaryString[3:6]
     dataString = binaryString[6:]
 
-    print(f'Version: {bitsVersion}')
-    print(f'Type: {bitsType}')
-    pprint(dataString)
-
     return bitsVersion, bitsType, dataString
 
 def parseLiteralString(dataString):
     # Break literal strings into groups of 5 for analysis
-
     literalString = ''
     bitsStrings = [dataString[i:i+5] for i in range(0, len(dataString), 5)]
-    print(bitsStrings)
+    
+    # Concatenate substrings (last 4 digits)
+    # The final string has a first digit of 0, triggering the return
     for substring in bitsStrings:
         literalString += substring[1:]
         if substring[0] == '0':
-            return int(literalString, 2)
+            literalValue = int(literalString, 2)
+            analyzedStrings = ''.join(bitsStrings[:bitsStrings.index(substring)+1])
+            remainingStrings = ''.join(bitsStrings[bitsStrings.index(substring)+1:])
+            return literalValue, analyzedStrings, remainingStrings
 
-binaryString = hexToBinary('D2FE28')
+def parseOperatorString(dataString):
+    # packetMode = 0 -> next 15 bits indicate sub-packet length
+    # packetMode = 1 -> next 11 bits indicate number of sub-packets
+    packetMode = dataString[0]
+
+    if packetMode == '0':
+        # Split out the subpackets from the dataString
+        subpacketLength = int(dataString[1:16], 2)
+        allSubpackets = dataString[16:subpacketLength+16]
+        stringToAnalyze = allSubpackets
+
+        # Analyze all of the substrings
+        alreadyParsed = ''
+        allVersions = []
+        allTypes = []
+        allData = []
+        allValues = []
+
+        while len(alreadyParsed) < subpacketLength:
+            # Get the first version and type from the subpacket
+            # If the type does not indicate literal: '100',
+            # then the remaining data contains additional subpackets
+
+            bitsVersion, bitsType, thisDataString = parseBinaryString(stringToAnalyze)
+            allVersions.append(bitsVersion)
+            allTypes.append(bitsType)
+            allData.append(thisDataString)
+
+            # If the type indicates a literal string '100', get the value
+            # There may be additional strings after the literal string, which need to be analyzed
+            if bitsType == '100':
+                thisValue, analyzedStrings, stringToAnalyze = parseLiteralString(thisDataString)
+                allValues.append(thisValue)
+            else:
+                parseOperatorString(thisDataString)
+            alreadyParsed += bitsVersion + bitsType + analyzedStrings
+        return allVersions, allTypes, allValues
+    else:
+        # Get the number of subpackets
+        numSubpackets = int(dataString[1:12], 2)
+        alreadyParsed = ''
+        allVersions = []
+        allTypes = []
+        allData = []
+        allValues = []
+
+        # Repeat parsing code for numSubpackets
+        for i in range(numSubpackets):
+            # Analyze all of the substrings
+            pass
+
+        return allVersions, allTypes, allValues
+
+print('---------------------------')
+binaryString = hexToBinary('EE00D40C823060')
 bitsVersion, bitsType, dataString = parseBinaryString(binaryString)
 
 if bitsType == '100':
-    literalValue = parseLiteralString(dataString)
-    print(f'Literal String: {literalValue}')
+    literalValue, analyzedStrings, remainingStrings = parseLiteralString(dataString)
+else:
+    allVersions, allTypes, allValues = parseOperatorString(dataString)
+
+print('All Versions:')
+pprint(allVersions)
+print('\nAll Types:')
+pprint(allTypes)
+print('\nAll Values:')
+pprint(allValues)
