@@ -12,7 +12,7 @@ def findKeySuffix(codePrefix):
         hashResult = hashlib.md5(thisCode.encode()).hexdigest()
         
         # Check if we've found a hash with 5 leading zeroes
-        if hashResult[:5] == '00000':
+        if hashResult[:6] == '000000':
             return currentNum
         else:
             currentNum += 1
