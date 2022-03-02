@@ -6,8 +6,8 @@ from curses import raw
 from fileinput import filename
 
 
+# Part 1
 grid = [[False for x in range(1000)] for x in range(1000)]
-
 def processInput():
     filename = '/Users/aiannazzone/Documents/GitHub/Advent-of-Code-2015/Day06/input.txt'
     with open(filename) as f:
@@ -64,4 +64,37 @@ def part1():
         processStep(step)
     countLights()
 
+# Part 2
+
+grid2 = [[0 for x in range(1000)] for x in range(1000)]
+def processStep2(step):
+    # step is in the format (command, a, b)
+    # a and b are tuples in the format (row, col)
+    command = step[0]
+    a = step[1]
+    b = step[2]
+    for row in range(a[0], b[0] + 1):
+        for col in range(a[1], b[1] + 1):
+            if command == 'toggle':
+                grid2[row][col] += 2
+            elif command == 'off':
+                grid2[row][col] -= 1
+                if grid2[row][col] < 0:
+                    grid2[row][col] = 0
+            else:
+                grid2[row][col] += 1
+
+def sumBrightnesses():
+    totalBrightness = 0
+    for row in grid2:
+        for light in row:
+            totalBrightness += light
+    print(f'The total brightness is {totalBrightness}.')
+def part2():
+    instructions = processInput()
+    for step in instructions:
+        processStep2(step)
+    sumBrightnesses()
+
 part1()
+part2()
