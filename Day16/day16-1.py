@@ -22,7 +22,7 @@ def generateNearbyTickets(rawData):
 
 
 # Import and clean up the data
-rawData = open('input.txt', 'r').read()
+rawData = open('sample.txt', 'r').read()
 rawData = rawData.split('\n\n')
 
 rules = generateRules(rawData)
