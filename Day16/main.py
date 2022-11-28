@@ -86,12 +86,21 @@ def parseOperatorString(dataString):
                 thisValue, analyzedStrings, stringToAnalyze = parseLiteralString(thisDataString)
                 allValues.append(thisValue)
             else:
-                parseOperatorString(thisDataString)
+                theseVersions, theseTypes, theseValues = parseOperatorString(thisDataString)
+                for (x, y, z) in zip(theseVersions, theseTypes, theseValues):
+                    allVersions.append(x)
+                    allTypes.append(y)
+                    allValues.append(z)
+                analyzedStrings = thisDataString
             alreadyParsed += bitsVersion + bitsType + analyzedStrings
         return allVersions, allTypes, allValues
+    
     else:
         # Get the number of subpackets
         numSubpackets = int(dataString[1:12], 2)
+        allSubpackets = dataString[12:]
+        stringToAnalyze = allSubpackets
+
         alreadyParsed = ''
         allVersions = []
         allTypes = []
@@ -100,13 +109,33 @@ def parseOperatorString(dataString):
 
         # Repeat parsing code for numSubpackets
         for i in range(numSubpackets):
-            # Analyze all of the substrings
-            pass
+            # Get the first version and type from the subpacket
+            # If the type does not indicate literal: '100',
+            # then the remaining data contains additional subpackets
 
+            bitsVersion, bitsType, thisDataString = parseBinaryString(stringToAnalyze)
+            allVersions.append(bitsVersion)
+            allTypes.append(bitsType)
+            allData.append(thisDataString)
+
+            # If the type indicates a literal string '100', get the value
+            # There may be additional strings after the literal string, which need to be analyzed
+            if bitsType == '100':
+                thisValue, analyzedStrings, stringToAnalyze = parseLiteralString(thisDataString)
+                allValues.append(thisValue)
+            else:
+                theseVersions, theseTypes, theseValues = parseOperatorString(thisDataString)
+                for (x, y, z) in zip(theseVersions, theseTypes, theseValues):
+                    allVersions.append(x)
+                    allTypes.append(y)
+                    allValues.append(z)
+                analyzedStrings = thisDataString
+
+            alreadyParsed += bitsVersion + bitsType + analyzedStrings
         return allVersions, allTypes, allValues
 
 print('---------------------------')
-binaryString = hexToBinary('EE00D40C823060')
+binaryString = hexToBinary('8A004A801A8002F478')
 bitsVersion, bitsType, dataString = parseBinaryString(binaryString)
 
 if bitsType == '100':
