@@ -19,9 +19,11 @@ calorieCount = processInput(filename)
 
 # Part 1
 def findMostCalories(calorieCount):
+    
+    # -- Initial Method -- #
+    '''
     maxCalorieIndex = 0
     maxCalorieCount = 0
-
     # Iterate through each elf and check their calorie sum
     # If the sum is greater than the previous max, update values
     for i in range(len(calorieCount)):
@@ -29,10 +31,15 @@ def findMostCalories(calorieCount):
         if thisElfCalories > maxCalorieCount:
             maxCalorieCount = thisElfCalories
             maxCalorieIndex = i
-    
-    # Now we have iterated through all of the elves and can print out the results
-    print(f'The most over-prepared elf is #{maxCalorieIndex + 1} with {maxCalorieCount} calories.')
-# findMostCalories(calorieCount)
+    '''
+
+    # -- More efficient method -- #
+    calorieSums = [sum(x) for x in calorieCount] # Find the sum for each elf
+    maxCalories = max(calorieSums) # Find the max of these sums
+    maxIndex = calorieSums.index(maxCalories) # Find the index of the max elf (just for fun)    
+    print(f'The most over-prepared elf is {maxIndex + 1} with {maxCalories} calories.')
+
+findMostCalories(calorieCount)
 
 # Part 2
 def findTopThree(calorieCount):
