@@ -14,7 +14,7 @@ def processInput(filename):
             calorieCount.append(thisElf)
 
         return calorieCount
-filename = 'Day 01/input1.txt'
+filename = 'Day01/input1.txt'
 calorieCount = processInput(filename)
 
 # Part 1
