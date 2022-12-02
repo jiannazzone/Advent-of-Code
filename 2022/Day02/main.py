@@ -9,7 +9,7 @@ def processInput(filename):
 filename = 'Day02/input.txt'
 instructions = processInput(filename)
 
-choiceDict = {
+round1Dict = {
     'A': 'rock',
     'B': 'paper',
     'C': 'scissors',
@@ -26,18 +26,18 @@ scoreDict = {
 
 class GameRound:
     def __init__(self, playerChoices) -> None:
-        self.theirGo = choiceDict[playerChoices[0]]
-        self.myGo = choiceDict[choiceDict[playerChoices[1]]]
+        self.theirGo = round1Dict[playerChoices[0]]
+        self.myGo = round1Dict[round1Dict[playerChoices[1]]]
     
     def playRound(self):
         roundScore = scoreDict[self.myGo]
         if self.theirGo is self.myGo:
             roundScore += 3 # Draw
-        elif (self.myGo is 'rock' and self.theirGo is 'scissors') or (self.myGo is 'paper' and self.theirGo is 'rock') or (self.myGo is 'scissors' and self.theirGo is 'paper'):
+        elif (self.myGo == 'rock' and self.theirGo == 'scissors') or (self.myGo == 'paper' and self.theirGo == 'rock') or (self.myGo == 'scissors' and self.theirGo == 'paper'):
             roundScore += 6 # Win
         
-        print(f'They chose {self.theirGo}. You chose {self.myGo}.')
-        print(f'You earned {roundScore} points this round.\n----------\n')
+        # print(f'They chose {self.theirGo}. You chose {self.myGo}.')
+        # print(f'You earned {roundScore} points this round.\n----------\n')
         return roundScore
 
 # Part 1
