@@ -9,7 +9,7 @@ def processInput(filename):
 filename = 'Day02/input.txt'
 instructions = processInput(filename)
 
-round1Dict = {
+choiceDict = {
     'A': 'rock',
     'B': 'paper',
     'C': 'scissors',
@@ -26,10 +26,11 @@ scoreDict = {
 
 class GameRound:
     def __init__(self, playerChoices) -> None:
-        self.theirGo = round1Dict[playerChoices[0]]
-        self.myGo = round1Dict[round1Dict[playerChoices[1]]]
+        self.theirGo = choiceDict[playerChoices[0]]
+        self.myGo = choiceDict[choiceDict[playerChoices[1]]]
+        self.needToDo = playerChoices[1]
     
-    def playRound(self):
+    def playRoundPart1(self):
         roundScore = scoreDict[self.myGo]
         if self.theirGo is self.myGo:
             roundScore += 3 # Draw
@@ -40,12 +41,46 @@ class GameRound:
         # print(f'You earned {roundScore} points this round.\n----------\n')
         return roundScore
 
+    def playRoundPart2(self):
+        roundScore = 0
+
+        if self.needToDo == 'X': #lose
+            if self.theirGo == 'rock':
+                roundScore = scoreDict['scissors']
+            elif self.theirGo == 'paper':
+                roundScore = scoreDict['rock']
+            else:
+                roundScore = scoreDict['paper']
+
+        elif self.needToDo == 'Y': #draw
+            myChoice = self.theirGo
+            roundScore = 3 + scoreDict[myChoice]
+
+        else: #win
+            roundScore = 6
+            if self.theirGo == 'rock':
+                roundScore += scoreDict['paper']
+            elif self.theirGo == 'paper':
+                roundScore += scoreDict['scissors']
+            else:
+                roundScore += scoreDict['rock']
+        return roundScore
+
+
 # Part 1
 def part1(instructions):
     myScore = 0
     for line in instructions:
         thisRound = GameRound(line)
-        myScore += thisRound.playRound()
-    print(f'Your final score is {myScore}.')        
+        myScore += thisRound.playRoundPart1()
+    print(f'Your final score is {myScore}.')
+# part1(instructions)
 
-part1(instructions)
+# Part 2
+def part2(instructions):
+    myScore = 0
+    for line in instructions:
+        thisRound = GameRound(line)
+        myScore += thisRound.playRoundPart2()
+    print(f'Your final score is {myScore}.')
+part2(instructions)
