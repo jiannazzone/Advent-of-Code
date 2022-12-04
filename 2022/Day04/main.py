@@ -18,7 +18,7 @@ def processInput(filename):
 filename = 'Day04/input.txt'
 allPairs = processInput(filename)
 
-def part1(allPairs):
+def main(allPairs):
     # Create an extended list, showing all values for each elf
     allPairsExtended = []
     for pair in allPairs:
@@ -29,11 +29,19 @@ def part1(allPairs):
     # print('\nAll Pairs Extended')
     # pprint(allPairsExtended)
 
-    overlapCount = 0
+    # PART 1
+    totalOverlapCount = 0
     for pair in allPairsExtended:
         if checkForCompleteOverlap(pair):
-            overlapCount += 1
-    print(f'There are {overlapCount} total overlaps.')
+            totalOverlapCount += 1
+    print(f'There are {totalOverlapCount} total overlaps.')
+
+    # PART 2
+    partialOverlapCount = 0
+    for pair in allPairsExtended:
+        if checkForPartialOverlap(pair):
+            partialOverlapCount += 1
+    print(f'There are {partialOverlapCount} partial overlaps.')
 
 def checkForCompleteOverlap(pair):
     if all(x in pair[0] for x in pair[1]):
@@ -43,4 +51,12 @@ def checkForCompleteOverlap(pair):
     else:
         return False
 
-part1(allPairs)
+def checkForPartialOverlap(pair):
+    if any(x in pair[0] for x in pair[1]):
+        return True
+    elif any(x in pair[1] for x in pair[0]):
+        return True
+    else:
+        return False
+
+main(allPairs)
