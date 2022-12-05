@@ -5,7 +5,7 @@ def processInput(filename):
     with open(filename) as f:
         data = f.read().split('\n\n')
     
-    # Stacks will be represented as a 2D array, with the last item of each row corresponding to the bottom of the stack
+    # Stacks will be represented as a 2D array, with the last item of each row corresponding to the top of the stack
     # [ [stack 1],
     #   [stack 2],
     #   [stack 3], ...
@@ -17,6 +17,13 @@ def processInput(filename):
         thisLine = list(line[1:len(line):4])
         for i in range(len(thisLine)):
             stacks[i].append(thisLine[i])
+    newStacks = []
+    for stack in stacks:
+        thisStack = []
+        for x in stack:
+            if x != ' ':
+                thisStack.append(x)
+        newStacks.append(thisStack[::-1])
 
     # For each line of instructions, create a tuple in the format
     # (quantity to move, starting stack, ending stack)
@@ -27,7 +34,7 @@ def processInput(filename):
         start = int(thisLine[3])
         end = int(thisLine[5])
         instructions.append((quantity, start, end))
-    return stacks, instructions
+    return newStacks, instructions
 
 stacks, instructions = processInput('Day05/sample.txt')
 pprint(stacks)
