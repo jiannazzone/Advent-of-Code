@@ -39,10 +39,11 @@ def processInput(filename):
     return newStacks, instructions
 
 stacks, instructions = processInput('Day05/input.txt')
-print(stacks)
+# print(stacks)
 # pprint(instructions)
 
-def makeMove(instruction):
+# PART 1
+def makeMovePart1(instruction):
     quantity = instruction[0]
     startStackIndex = instruction[1]-1
     endStackIndex = instruction[2]-1
@@ -52,12 +53,33 @@ def makeMove(instruction):
 
 def processInstructionsPart1():
     for line in instructions:
-        # print('\n')
-        makeMove(line)
-        # print(stacks)
+        makeMovePart1(line)
     topBoxes = ''
     for stack in stacks:
         topBoxes += stack[-1]
     print(f'The final top boxes are {topBoxes}')
 
-processInstructionsPart1()
+# processInstructionsPart1()
+
+# PART 2
+def makeMovePart2(instruction):
+    quantity = instruction[0]
+    startStackIndex = instruction[1]-1
+    endStackIndex = instruction[2]-1
+
+    boxesToMove = []
+    for x in range(quantity):
+        boxesToMove.append(stacks[startStackIndex].pop())
+    boxesToMove.reverse()
+    for box in boxesToMove:
+        stacks[endStackIndex].append(box)
+
+def processInstructionsPart2():
+    for line in instructions:
+        makeMovePart2(line)
+    topBoxes = ''
+    for stack in stacks:
+        topBoxes += stack[-1]
+    print(f'The final top boxes are {topBoxes}')
+
+processInstructionsPart2()
