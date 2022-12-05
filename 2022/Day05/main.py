@@ -10,14 +10,13 @@ def processInput(filename):
     #   [stack 2],
     #   [stack 3], ...
     # ]
-    print(data[0])
+    print(data[0] + '\n')
     numStacks = len(data[0].splitlines()[-1].split(' '))//3
     stacks = [[] for x in range(numStacks)]
     for line in data[0].splitlines()[:-1]:
         thisLine = list(line[1:len(line):4])
         for i in range(len(thisLine)):
             stacks[i].append(thisLine[i])
-    # pprint(stacks)
 
     # For each line of instructions, create a tuple in the format
     # (quantity to move, starting stack, ending stack)
@@ -28,6 +27,8 @@ def processInput(filename):
         start = int(thisLine[3])
         end = int(thisLine[5])
         instructions.append((quantity, start, end))
-    # pprint(instructions)
+    return stacks, instructions
 
-processInput('Day05/sample.txt')
+stacks, instructions = processInput('Day05/sample.txt')
+pprint(stacks)
+pprint(instructions)
