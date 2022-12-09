@@ -6,7 +6,7 @@ def processInput(filename):
     treeMap = [[int(x) for x in line] for line in data.splitlines()]
     return treeMap
 
-treeMap = processInput('Day08/sample.txt')
+treeMap = processInput('Day08/input.txt')
 
 def findVisible():
     # All trees on the edge are visible
@@ -33,13 +33,13 @@ def findVisible():
 def checkTree(thisTree, row, col):
     # Check the row
     thisRowCheck = [x < thisTree for x in treeMap[row]]
-    if all(thisRowCheck[:col-1]) or all(thisRowCheck[col+1:]):
+    if all(thisRowCheck[:col]) or all(thisRowCheck[col+1:]):
         return 1
     
     # Check the column
     thisCol = [x[col] for x in treeMap]
     thisColCheck = [x < thisTree for x in thisCol]
-    if all(thisColCheck[:row-1]) or all(thisColCheck[row+1:]):
+    if all(thisColCheck[:row]) or all(thisColCheck[row+1:]):
         return 1
     
     # Tree not visible
