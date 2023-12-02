@@ -36,22 +36,42 @@ round = {
 }
 '''
 
-def part1():
-    #Given by prompt
-    maxValues = {
-        'red': 12,
-        'green': 13,
-        'blue': 14
-    }
+# Part 1
+maxValues = {
+    'red': 12,
+    'green': 13,
+    'blue': 14
+}
 
-    def checkGame(allGames, i):
-        for round in allGames[i]:
-            for color in round.keys():
-                if round[color] > maxValues[color]:
-                    return 0
-        return i
-                
-    validGameSum = 0
-    for i in allGames.keys():
-        validGameSum += checkGame(allGames, i)
-    print(f'The sum of valid game IDs is {validGameSum}')
+def checkGame(allGames, i):
+    for round in allGames[i]:
+        for color in round.keys():
+            if round[color] > maxValues[color]:
+                return 0
+    return i
+            
+validGameSum = 0
+for i in allGames.keys():
+    validGameSum += checkGame(allGames, i)
+# print(f'The sum of valid game IDs is {validGameSum}')
+
+# Part 2
+def getPower(game):
+    thisGameMins = {
+        'red': 0,
+        'blue': 0,
+        'green': 0
+    }
+    for round in game:
+        for color in round.keys():
+            if round[color] > thisGameMins[color]:
+                thisGameMins[color] = round[color]
+    power = 1
+    for val in thisGameMins.values():
+        power *= val
+    return power
+
+powerSum = 0
+for i in allGames.keys():
+    powerSum += getPower(allGames[i])
+print(f'The power sum is {powerSum}')
